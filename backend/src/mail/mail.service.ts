@@ -20,6 +20,13 @@ export class MailService {
   }
 
   async sendMail(to: string, subject: string, text: string) {
+    console.log(
+      this.configService.get<string>('EMAIL_PASS'),
+      'pass',
+      this.configService.get<string>('EMAIL_USER'),
+      'lala',
+      to,
+    );
     const info = await this.transporter.sendMail({
       from: process.env.EMAIL_FROM,
       to,
