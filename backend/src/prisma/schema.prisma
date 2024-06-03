@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Models
+
+model User {
+  id      Int      @id @default(autoincrement())
+  email   String   @unique
+  fullname    String?
+  password    String
+  address    String?
+  role      Role
+  cartItems CartItem[] 
+  orderDetails OrderDetail[]
+  createdAt DateTime @default(now())
+}
+
+model PaymentDetail {
+  id        Int      @id @default(autoincrement())
+  amount    Decimal  
+  status   PaymentStatus
+  method  PaymentMethod
+  orderDetail OrderDetail?
+  createdAt DateTime @default(now())
+}
+
+model CartItem {
+  id     Int     @id @default(autoincrement())
+  quantity Int
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int     @unique
+  product   Product    @relation(fields: [productId], references: [id])
+  productId Int     @unique
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id     Int     @id @default(autoincrement())
+  name    String?
+  variant  Variant 
+  description String @db.Text
+  price Decimal
+  quantity Int
+  pictureUrl String?
+  cartItems CartItem[] 
+  orderItems OrderItem[]
+  createdAt DateTime @default(now())
+}
+
+model OrderDetail {
+  id     Int     @id @default(autoincrement())
+  total  Decimal
+  status   OrderStatus
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int     @unique
+  paymentDetail   PaymentDetail    @relation(fields: [paymentId], references: [id])
+  paymentId Int @unique
+  orderItems OrderItem[]
+  createdAt DateTime @default(now())
+}
+
+model OrderItem {
+  id     Int     @id @default(autoincrement())
+  quantity Int 
+  orderDetail OrderDetail @relation(fields: [orderDetailId], references: [id])
+  orderDetailId Int @unique
+  product Product @relation(fields: [productId], references: [id])
+  productId Int @unique
+  createdAt DateTime @default(now())
+}
+
+//enums
+
+enum Variant {
+  TSHIRT
+  SKETCHBOOOK
+  ARTWORK
+  ILLUSTRATION
+  ANIMATION
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+}
+
+enum PaymentStatus {
+  INPROGRESS
+  PAID
+}
+
+enum PaymentMethod {
+  CART
+  CASH
+}
+
+enum Role {
+  USER
+  ADMIN
+}
