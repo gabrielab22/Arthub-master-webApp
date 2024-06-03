@@ -7,6 +7,7 @@ import NavBar from "./components/NavBar/NavBar";
 import ProductGrid from "./components/Products/ProductGrid";
 import AddProduct from "./components/Products/AddProduct";
 import ContactForm from "./components/Contact";
+import EditProduct from "./components/Products/EditProduct";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="contact" element={<ContactForm />} />
           <Route path="product">
             <Route path="add" element={<AddProduct />} />
+            <Route path="edit/:productId" element={<EditProduct />} />
           </Route>
         </Routes>
       </div>

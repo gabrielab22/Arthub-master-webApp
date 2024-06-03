@@ -53,6 +53,9 @@ const ProductCard: React.FC<Props> = ({ product }) => {
       });
     }
   };
+  const handleEdit = (productId: any) => {
+    navigate(`/product/edit/${productId}`);
+  };
 
   return (
     <Box borderWidth="1px" borderRadius="lg" overflow="hidden" p="4">
@@ -83,7 +86,7 @@ const ProductCard: React.FC<Props> = ({ product }) => {
             </Button>
             <Button
               colorScheme="yellow"
-              onClick={() => navigate("/product/add")}
+              onClick={() => handleEdit(product.id)}
               mr="2"
               size={{ base: "xs", md: "sm" }}
             >
