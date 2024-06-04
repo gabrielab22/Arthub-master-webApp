@@ -6,22 +6,26 @@ import {
   Button,
   AspectRatio,
   useToast,
+  Stack,
 } from "@chakra-ui/react";
 import { Product } from "../../types";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import DeleteProductDialog from "./DeleteProductDialog";
+import { CgDetailsMore } from "react-icons/cg";
 
 interface Props {
   product: Product;
+  onViewDetails: () => void;
 }
 
-const ProductCard: React.FC<Props> = ({ product }) => {
-  const toast = useToast();
+const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
   const navigate = useNavigate();
 
   const [isAdmin, setIsAdmin] = useState<string | null>(
     localStorage.getItem("isAdmin")
   );
+
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   window.addEventListener("storage", () => {
     setIsAdmin(localStorage.getItem("isAdmin"));
@@ -31,28 +35,6 @@ const ProductCard: React.FC<Props> = ({ product }) => {
     console.log(`Buying ${product.name}`);
   };
 
-  const handleDelete = async () => {
-    try {
-      await axios.delete("product/" + product?.id);
-      navigate("/shop");
-      toast({
-        title: "Product Deleted",
-        description: `${product.name} has been deleted successfully.`,
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-    } catch (error: any) {
-      console.error("Error deleting product:", error);
-      toast({
-        title: "Error",
-        description: "An error occurred while deleting the product.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
   const handleEdit = (productId: any) => {
     navigate(`/product/edit/${productId}`);
   };
@@ -71,9 +53,21 @@ const ProductCard: React.FC<Props> = ({ product }) => {
         <Heading size="md">{product.name}</Heading>
         <Text>Price: ${product.price}</Text>
         <Text>Quantity Available: {product.quantity}</Text>
-        <Button colorScheme="blue" width="100%" mt="1" onClick={handleBuy}>
-          Buy
-        </Button>
+        <Stack direction="row" spacing={4} mt="1">
+          <Button colorScheme="blue" flex="7" onClick={handleBuy}>
+            Buy
+          </Button>
+          <Button
+            rightIcon={<CgDetailsMore />}
+            colorScheme="teal"
+            variant="outline"
+            flex="3"
+            onClick={onViewDetails}
+          >
+            View Details
+          </Button>
+        </Stack>
+
         {isAdmin == "true" && (
           <Box mt="2">
             <Button
@@ -95,13 +89,20 @@ const ProductCard: React.FC<Props> = ({ product }) => {
             <Button
               colorScheme="red"
               size={{ base: "xs", md: "sm" }}
-              onClick={handleDelete}
+              onClick={() => setIsDeleteDialogOpen(true)}
             >
               Delete
             </Button>
           </Box>
         )}
       </Box>
+
+      <DeleteProductDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        productId={product.id}
+        productName={product.name || "Unnamed Product"}
+      />
     </Box>
   );
 };

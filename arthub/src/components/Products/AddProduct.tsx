@@ -12,9 +12,11 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { Product, Variant } from "../../types";
+import { useNavigate } from "react-router-dom";
 
 const AddProduct: React.FC = () => {
   const toast = useToast();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -34,6 +36,7 @@ const AddProduct: React.FC = () => {
         isClosable: true,
       });
       reset();
+      navigate("/shop");
     } catch (error: any) {
       console.error("Error adding product:", error);
       toast({

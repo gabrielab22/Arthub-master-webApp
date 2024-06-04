@@ -3,10 +3,12 @@ import axios from "axios";
 import ProductCard from "./ProductCard";
 import { SimpleGrid, Select } from "@chakra-ui/react";
 import { Product, Variant } from "../../types";
+import ProductDetailsModal from "./DetailsProduct";
 
 const ProductGrid: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedType, setSelectedType] = useState<Variant | "all">("all");
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -29,6 +31,10 @@ const ProductGrid: React.FC = () => {
     setSelectedType(event.target.value as Variant | "all");
   };
 
+  const handleCardClick = (product: Product) => {
+    setSelectedProduct(product);
+  };
+
   return (
     <div>
       <Select value={selectedType} onChange={handleTypeChange}>
@@ -41,9 +47,20 @@ const ProductGrid: React.FC = () => {
       </Select>
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="4">
         {filteredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard
+            key={product.id}
+            product={product}
+            onViewDetails={() => handleCardClick(product)}
+          />
         ))}
       </SimpleGrid>
+      {selectedProduct && (
+        <ProductDetailsModal
+          isOpen={!!selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          product={selectedProduct}
+        />
+      )}
     </div>
   );
 };

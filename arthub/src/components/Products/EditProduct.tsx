@@ -5,6 +5,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Textarea,
   Button,
   useToast,
 } from "@chakra-ui/react";
@@ -15,12 +16,12 @@ const EditProduct = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
 
-  console.log("id");
   const [product, setProduct] = useState({
     name: "",
     price: 0,
     quantity: 0,
     pictureUrl: "",
+    description: "",
   });
 
   const toast = useToast();
@@ -49,7 +50,7 @@ const EditProduct = () => {
     const { name, value } = e.target;
     setProduct((prevProduct) => ({
       ...prevProduct,
-      [name]: name === "quantity" ? parseInt(value, 10) : value,
+      [name]: value,
     }));
   };
 
@@ -105,6 +106,14 @@ const EditProduct = () => {
           type="number"
           name="quantity"
           value={product.quantity}
+          onChange={handleChange}
+        />
+      </FormControl>
+      <FormControl id="description" mb="4">
+        <FormLabel>Description</FormLabel>
+        <Textarea
+          name="description"
+          value={product.description}
           onChange={handleChange}
         />
       </FormControl>
