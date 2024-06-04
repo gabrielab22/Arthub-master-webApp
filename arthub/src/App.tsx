@@ -8,6 +8,7 @@ import ProductGrid from "./components/Products/ProductGrid";
 import AddProduct from "./components/Products/AddProduct";
 import ContactForm from "./components/Contact";
 import EditProduct from "./components/Products/EditProduct";
+import VideoGrid from "./components/Art/VideoGrid";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
+          <Route path="art" element={<VideoGrid />} />
           <Route path="shop" element={<ProductGrid />} />
           <Route path="contact" element={<ContactForm />} />
           <Route path="product">
