@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const [showCart, setShowCart] = useState(false);
+
   const menuItems = [
     { id: 1, title: "-Home-", link: "/" },
     { id: 2, title: "-Shop-", link: "/shop" },

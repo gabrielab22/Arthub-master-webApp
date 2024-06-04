@@ -5,8 +5,8 @@ import {
   Text,
   Button,
   AspectRatio,
-  useToast,
   Stack,
+  useToast,
 } from "@chakra-ui/react";
 import { Product } from "../../types";
 import { useNavigate } from "react-router-dom";
@@ -19,20 +19,33 @@ interface Props {
 }
 
 const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
+  const toast = useToast();
   const navigate = useNavigate();
-
   const [isAdmin, setIsAdmin] = useState<string | null>(
     localStorage.getItem("isAdmin")
   );
-
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const isLoggedIn = () => {
+    return localStorage.getItem("token") !== null;
+  };
 
   window.addEventListener("storage", () => {
     setIsAdmin(localStorage.getItem("isAdmin"));
   });
 
-  const handleBuy = () => {
-    console.log(`Buying ${product.name}`);
+  const addToCart = () => {
+    if (!isLoggedIn()) {
+      toast({
+        title: "Login Required",
+        description: "You must log in before adding to cart.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
+    } else {
+      console.log(`Adding ${product.name} to cart`);
+      // Add logic for adding product to cart
+    }
   };
 
   const handleEdit = (productId: any) => {
@@ -54,8 +67,8 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
         <Text>Price: ${product.price}</Text>
         <Text>Quantity Available: {product.quantity}</Text>
         <Stack direction="row" spacing={4} mt="1">
-          <Button colorScheme="blue" flex="7" onClick={handleBuy}>
-            Buy
+          <Button colorScheme="blue" flex="7" onClick={addToCart}>
+            Add to cart
           </Button>
           <Button
             rightIcon={<CgDetailsMore />}
@@ -108,3 +121,6 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
 };
 
 export default ProductCard;
+function showToast(arg0: string) {
+  throw new Error("Function not implemented.");
+}
