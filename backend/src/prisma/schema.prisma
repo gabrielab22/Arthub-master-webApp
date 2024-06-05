@@ -105,7 +105,7 @@ enum PaymentStatus {
 }
 
 enum PaymentMethod {
-  CART
+  CARD
   CASH
 }
 

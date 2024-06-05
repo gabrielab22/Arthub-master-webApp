@@ -10,6 +10,7 @@ import ContactForm from "./components/Contact";
 import EditProduct from "./components/Products/EditProduct";
 import VideoGrid from "./components/Art/VideoGrid";
 import CartItemComponent from "./components/CartItem/CarItem";
+import Order from "./components/Order";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="shop" element={<ProductGrid />} />
           <Route path="contact" element={<ContactForm />} />
           <Route path="cart-item" element={<CartItemComponent />} />
+          <Route path="order" element={<Order totalPrice={0} />} />
           <Route path="product">
             <Route path="add" element={<AddProduct />} />
             <Route path="edit/:productId" element={<EditProduct />} />

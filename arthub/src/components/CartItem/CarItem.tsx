@@ -9,11 +9,13 @@ import {
   Center,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { CartItem, CartItemResponse } from "../../types";
+import { CartItem, CartItemResponse, Product } from "../../types";
 import { getUserIdFromToken } from "../../utilis/authUtilis";
+import { useNavigate } from "react-router-dom";
 
 const CartItemComponent: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -71,6 +73,9 @@ const CartItemComponent: React.FC = () => {
   const totalPrice = cartItems.reduce((total, item) => {
     return total + item.product.price * item.quantity;
   }, 0);
+  const handleCheckout = () => {
+    console.log("lala", totalPrice);
+  };
 
   return (
     <Center>
@@ -136,7 +141,7 @@ const CartItemComponent: React.FC = () => {
             Total Price: ${totalPrice}
           </Text>
         </Box>
-        <Button colorScheme="blue" mt={4} w="100%">
+        <Button colorScheme="blue" mt={4} w="100%" onClick={handleCheckout}>
           Checkout
         </Button>
       </Box>

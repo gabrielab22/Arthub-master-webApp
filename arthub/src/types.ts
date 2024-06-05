@@ -104,7 +104,7 @@ export enum PaymentStatus {
 }
 
 export enum PaymentMethod {
-  CART = "CART",
+  CARD = "CARD",
   CASH = "CASH",
 }
 
