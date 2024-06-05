@@ -6,6 +6,12 @@ export interface LoginCredentials {
 export interface LoginResponse {
   token: string;
 }
+export interface CartItemResponse {
+  id: number;
+  quantity: number;
+  productId: number;
+  product: Product;
+}
 
 export interface User {
   id: number;
@@ -42,9 +48,7 @@ export interface PaymentDetail {
 export interface CartItem {
   id: number;
   quantity: number;
-  user: User;
   product: Product;
-  createdAt: Date;
 }
 
 export interface Product {

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, ButtonGroup } from "@chakra-ui/react";
 import "./NavBar.css";
 import { useNavigate } from "react-router-dom";
+import { BsCart4 } from "react-icons/bs";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -42,6 +43,14 @@ const NavBar = () => {
           ))}
         </ul>
       </nav>
+      <Button
+        rightIcon={<BsCart4 />}
+        colorScheme="blue"
+        variant="outline"
+        onClick={() => navigate("/cart-item")}
+      >
+        Cart
+      </Button>
       <div>
         {token ? (
           <Button colorScheme="red" onClick={handleLogout}>

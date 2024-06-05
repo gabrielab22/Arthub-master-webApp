@@ -22,12 +22,12 @@ const AddProduct: React.FC = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<Product>();
 
   const onSubmit = async (formData: Product) => {
     try {
-      const response = await axios.post<Product>("product", formData);
+      await axios.post<Product>("product", formData);
       toast({
         title: "Product",
         description: "Product created successfully.",

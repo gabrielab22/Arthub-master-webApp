@@ -37,13 +37,15 @@ model PaymentDetail {
 }
 
 model CartItem {
-  id     Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   quantity Int
   user   User    @relation(fields: [userId], references: [id])
-  userId Int     @unique
+  userId Int 
   product   Product    @relation(fields: [productId], references: [id])
-  productId Int     @unique
+  productId Int 
   createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
 }
 
 model Product {
@@ -64,7 +66,7 @@ model OrderDetail {
   total  Decimal
   status   OrderStatus
   user   User    @relation(fields: [userId], references: [id])
-  userId Int     @unique
+  userId Int     
   paymentDetail   PaymentDetail    @relation(fields: [paymentId], references: [id])
   paymentId Int @unique
   orderItems OrderItem[]
@@ -75,9 +77,9 @@ model OrderItem {
   id     Int     @id @default(autoincrement())
   quantity Int 
   orderDetail OrderDetail @relation(fields: [orderDetailId], references: [id])
-  orderDetailId Int @unique
+  orderDetailId Int 
   product Product @relation(fields: [productId], references: [id])
-  productId Int @unique
+  productId Int 
   createdAt DateTime @default(now())
 }
 

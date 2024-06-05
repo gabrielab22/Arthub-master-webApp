@@ -32,7 +32,7 @@ const Login = () => {
       const { token } = response.data;
       const user: User = jwtDecode(token);
 
-      if (user.role == "ADMIN") {
+      if (user.role === "ADMIN") {
         isAdmin = true;
       }
 

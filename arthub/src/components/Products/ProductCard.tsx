@@ -8,10 +8,12 @@ import {
   Stack,
   useToast,
 } from "@chakra-ui/react";
-import { Product } from "../../types";
+import { Product, User } from "../../types";
 import { useNavigate } from "react-router-dom";
 import DeleteProductDialog from "./DeleteProductDialog";
 import { CgDetailsMore } from "react-icons/cg";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 interface Props {
   product: Product;
@@ -33,7 +35,16 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
     setIsAdmin(localStorage.getItem("isAdmin"));
   });
 
-  const addToCart = () => {
+  const getUserIdFromToken = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const user: User = jwtDecode(token);
+      return user.id;
+    }
+    return null;
+  };
+
+  const addToCart = async () => {
     if (!isLoggedIn()) {
       toast({
         title: "Login Required",
@@ -43,12 +54,36 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
         isClosable: true,
       });
     } else {
-      console.log(`Adding ${product.name} to cart`);
-      // Add logic for adding product to cart
+      const userId = getUserIdFromToken();
+      console.log(userId, "user");
+      const quantity = 1;
+      try {
+        await axios.post("/cart-item/add-or-update", {
+          userId,
+          productId: product.id,
+          quantity,
+        });
+
+        toast({
+          title: "Added to Cart",
+          description: `${product.name} has been added to your cart.`,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "There was an error adding the product to your cart.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     }
   };
 
-  const handleEdit = (productId: any) => {
+  const handleEdit = (productId: number) => {
     navigate(`/product/edit/${productId}`);
   };
 
@@ -67,7 +102,7 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
         <Text>Price: ${product.price}</Text>
         <Text>Quantity Available: {product.quantity}</Text>
         <Stack direction="row" spacing={4} mt="1">
-          <Button colorScheme="blue" flex="7" onClick={addToCart}>
+          <Button colorScheme="blue" flex="7" onClick={() => addToCart()}>
             Add to cart
           </Button>
           <Button
@@ -81,7 +116,7 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
           </Button>
         </Stack>
 
-        {isAdmin == "true" && (
+        {isAdmin === "true" && (
           <Box mt="2">
             <Button
               colorScheme="green"
@@ -121,6 +156,3 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
 };
 
 export default ProductCard;
-function showToast(arg0: string) {
-  throw new Error("Function not implemented.");
-}

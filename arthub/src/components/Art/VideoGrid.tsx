@@ -1,5 +1,5 @@
 import React from "react";
-import { SimpleGrid, Box, AspectRatio, Text, Center } from "@chakra-ui/react";
+import { SimpleGrid, Box, AspectRatio, Center } from "@chakra-ui/react";
 import TextContent from "./TekstContent";
 import { horizontalVideos, verticalVideos } from "./constants";
 

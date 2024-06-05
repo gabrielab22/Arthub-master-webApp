@@ -14,28 +14,31 @@ import { CartItem } from '@prisma/client';
 export class CartItemController {
   constructor(private readonly cartItemService: CartItemService) {}
 
-  @Post()
-  async create(@Body() data: any): Promise<CartItem> {
-    return this.cartItemService.createCartItem(data);
+  @Post('add-or-update')
+  async addOrUpdateCartItem(
+    @Body('userId') userId: number,
+    @Body('productId') productId: number,
+    @Body('quantity') quantity: number,
+  ): Promise<CartItem> {
+    return this.cartItemService.createOrUpdateCartItem(
+      userId,
+      productId,
+      quantity,
+    );
   }
-
-  @Get()
-  async findAll(): Promise<CartItem[]> {
-    return this.cartItemService.getCartItems();
+  @Get(':userId')
+  async getCartItemsByUserId(
+    @Param('userId') userId: number,
+  ): Promise<CartItem[]> {
+    return this.cartItemService.getCartItemsByUserId(userId);
   }
-
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<CartItem | null> {
-    return this.cartItemService.getCartItemById(+id);
-  }
-
-  @Put(':id')
-  async update(@Param('id') id: string, @Body() data: any): Promise<CartItem> {
-    return this.cartItemService.updateCartItem(+id, data);
+  async getCartItemById(@Param('id') cartItemId: number): Promise<CartItem> {
+    return this.cartItemService.getCartItemById(cartItemId);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<CartItem> {
-    return this.cartItemService.deleteCartItem(+id);
+  async deleteCartItem(@Param('id') cartItemId: number): Promise<void> {
+    return this.cartItemService.deleteCartItem(cartItemId);
   }
 }
