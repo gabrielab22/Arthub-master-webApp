@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, ButtonGroup } from "@chakra-ui/react";
 import "./NavBar.css";
 import { useNavigate } from "react-router-dom";
 import { BsCart4 } from "react-icons/bs";
+import { isAdmin, isLoggedIn } from "../../utilis/authUtilis";
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const [showCart, setShowCart] = useState(false);
 
   const menuItems = [
     { id: 1, title: "-Home-", link: "/" },
@@ -14,14 +14,6 @@ const NavBar = () => {
     { id: 3, title: "-Art-", link: "/art" },
     { id: 4, title: "-Contact-", link: "/contact" },
   ];
-
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  );
-
-  window.addEventListener("storage", () => {
-    setToken(localStorage.getItem("token"));
-  });
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -43,16 +35,19 @@ const NavBar = () => {
           ))}
         </ul>
       </nav>
-      <Button
-        rightIcon={<BsCart4 />}
-        colorScheme="blue"
-        variant="outline"
-        onClick={() => navigate("/cart-item")}
-      >
-        Cart
-      </Button>
+      {isLoggedIn() && !isAdmin() && (
+        <Button
+          rightIcon={<BsCart4 />}
+          colorScheme="blue"
+          variant="outline"
+          onClick={() => navigate("/cart-item")}
+          style={{ marginRight: "10px" }}
+        >
+          Cart
+        </Button>
+      )}
       <div>
-        {token ? (
+        {isLoggedIn() ? (
           <Button colorScheme="red" onClick={handleLogout}>
             Logout
           </Button>

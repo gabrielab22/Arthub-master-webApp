@@ -9,20 +9,11 @@ import {
   Center,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { CartItem, CartItemResponse, User } from "../../types";
-import { jwtDecode } from "jwt-decode";
+import { CartItem, CartItemResponse } from "../../types";
+import { getUserIdFromToken } from "../../utilis/authUtilis";
 
 const CartItemComponent: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-
-  const getUserIdFromToken = () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const user: User = jwtDecode(token);
-      return user.id;
-    }
-    return null;
-  };
 
   useEffect(() => {
     const fetchCartItems = async () => {

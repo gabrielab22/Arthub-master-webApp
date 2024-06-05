@@ -8,12 +8,16 @@ import {
   Stack,
   useToast,
 } from "@chakra-ui/react";
-import { Product, User } from "../../types";
+import { Product } from "../../types";
 import { useNavigate } from "react-router-dom";
 import DeleteProductDialog from "./DeleteProductDialog";
 import { CgDetailsMore } from "react-icons/cg";
-import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import {
+  getUserIdFromToken,
+  isAdmin,
+  isLoggedIn,
+} from "../../utilis/authUtilis";
 
 interface Props {
   product: Product;
@@ -23,26 +27,8 @@ interface Props {
 const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
   const toast = useToast();
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState<string | null>(
-    localStorage.getItem("isAdmin")
-  );
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const isLoggedIn = () => {
-    return localStorage.getItem("token") !== null;
-  };
-
-  window.addEventListener("storage", () => {
-    setIsAdmin(localStorage.getItem("isAdmin"));
-  });
-
-  const getUserIdFromToken = () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const user: User = jwtDecode(token);
-      return user.id;
-    }
-    return null;
-  };
 
   const addToCart = async () => {
     if (!isLoggedIn()) {
@@ -54,8 +40,17 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
         isClosable: true,
       });
     } else {
+      if (isAdmin()) {
+        toast({
+          title: "Admin Notice",
+          description: "You are admin.",
+          status: "info",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
       const userId = getUserIdFromToken();
-      console.log(userId, "user");
       const quantity = 1;
       try {
         await axios.post("/cart-item/add-or-update", {
@@ -116,7 +111,7 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
           </Button>
         </Stack>
 
-        {isAdmin === "true" && (
+        {isAdmin() && (
           <Box mt="2">
             <Button
               colorScheme="green"

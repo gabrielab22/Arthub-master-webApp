@@ -22,11 +22,7 @@ const Register = () => {
 
   const onSubmit = async (data: CreateUser) => {
     try {
-      const response = await axios.post<RegistrationResponse>(
-        "user/register",
-        data
-      );
-      const { user, token } = response.data;
+      await axios.post<RegistrationResponse>("user/register", data);
 
       toast({
         title: "User creation success!",
