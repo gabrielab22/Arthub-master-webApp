@@ -9,7 +9,7 @@ import {
   Center,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { CartItem, CartItemResponse, Product } from "../../types";
+import { CartItem, CartItemResponse } from "../../types";
 import { getUserIdFromToken } from "../../utilis/authUtilis";
 import { useNavigate } from "react-router-dom";
 
@@ -163,9 +163,20 @@ const CartItemComponent: React.FC = () => {
             Total Price: ${totalPrice}
           </Text>
         </Box>
-        <Button colorScheme="blue" mt={4} w="100%" onClick={handleCheckout}>
-          Checkout
-        </Button>
+        {cartItems.length > 0 ? (
+          <Button colorScheme="blue" mt={4} w="100%" onClick={handleCheckout}>
+            Checkout
+          </Button>
+        ) : (
+          <Button
+            colorScheme="blue"
+            mt={4}
+            w="100%"
+            onClick={() => navigate("/shop")}
+          >
+            Go to shop
+          </Button>
+        )}
       </Box>
     </Center>
   );

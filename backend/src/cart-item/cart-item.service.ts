@@ -65,7 +65,11 @@ export class CartItemService {
       },
     });
   }
-
+  async deleteCartItemsByUserId(userId: number): Promise<void> {
+    await this.prisma.cartItem.deleteMany({
+      where: { userId: parseInt(userId.toString()) },
+    });
+  }
   async deleteCartItem(cartItemId: number): Promise<void> {
     await this.prisma.cartItem.delete({
       where: {

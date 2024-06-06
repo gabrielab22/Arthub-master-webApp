@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
-import { CartItem, User } from "../types";
+import { User } from "../types";
+import axios from "axios";
 
 export const isLoggedIn = (): boolean => {
   return localStorage.getItem("token") !== null;
@@ -25,6 +26,26 @@ export const calculateTotalPrice = (cartItems: any) => {
       totalPrice += cartItem.quantity * cartItem.product.price;
     }
   );
-  console.log(totalPrice, "totalPrice");
+
   return totalPrice;
+};
+
+export const updatePaymentStatus = async (paymentId: number) => {
+  try {
+    const response = await axios.put(`payment/${paymentId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating payment status:", error);
+    throw error;
+  }
+};
+
+export const deleteCartItemsByUserId = async (userId: number) => {
+  try {
+    await axios.delete(`/cart-item/delete-by-user/${userId}`);
+    console.log("All cart items for user", userId, "deleted successfully");
+  } catch (error) {
+    console.error("Error deleting cart items:", error);
+    throw error;
+  }
 };

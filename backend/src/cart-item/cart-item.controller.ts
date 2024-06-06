@@ -37,6 +37,13 @@ export class CartItemController {
     return this.cartItemService.getCartItemById(cartItemId);
   }
 
+  @Delete('delete-by-user/:userId')
+  async deleteCartItemsByUserId(
+    @Param('userId') userId: number,
+  ): Promise<void> {
+    return this.cartItemService.deleteCartItemsByUserId(userId);
+  }
+
   @Delete(':id')
   async deleteCartItem(@Param('id') cartItemId: number): Promise<void> {
     return this.cartItemService.deleteCartItem(cartItemId);

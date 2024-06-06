@@ -10,13 +10,18 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { STRIPE_PUBLISHABLE_API_KEY } from "./constants";
 import { loadStripe } from "@stripe/stripe-js";
+import {
+  deleteCartItemsByUserId,
+  getUserIdFromToken,
+  updatePaymentStatus,
+} from "../../utilis/authUtilis";
 
 const stripePromise = loadStripe(STRIPE_PUBLISHABLE_API_KEY);
 
 const Payment = () => {
   const toast = useToast();
   const location = useLocation();
-  const { amount } = location.state;
+  const { amount, paymentId } = location.state;
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
@@ -24,6 +29,12 @@ const Payment = () => {
   const handlePayment = async () => {
     if (!stripe || !elements) {
       return;
+    }
+
+    const userId = getUserIdFromToken();
+
+    if (!userId) {
+      return null;
     }
 
     const cardElement = elements.getElement(CardElement);
@@ -35,15 +46,15 @@ const Payment = () => {
       const { data } = await axios.post("payment", {
         amount,
       });
-      console.log("data", data);
-      console.log("cardElement", cardElement);
 
-      const paymentResult = await stripe.confirmCardPayment(data.clientSecret, {
-        payment_method: {
-          card: cardElement,
-        },
-      });
-      console.log("paymentREsult", paymentResult);
+      const paymentResult = await stripe.confirmCardPayment(
+        data.client_secret,
+        {
+          payment_method: {
+            card: cardElement,
+          },
+        }
+      );
       if (paymentResult.error) {
         toast({
           title: "Payment Error",
@@ -61,6 +72,8 @@ const Payment = () => {
             duration: 5000,
             isClosable: true,
           });
+          updatePaymentStatus(paymentId);
+          deleteCartItemsByUserId(userId);
         }
         navigate("shop");
       }

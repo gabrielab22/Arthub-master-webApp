@@ -19,11 +19,16 @@ import {
 } from "@chakra-ui/react";
 import {
   CartItem,
+  OrderResponse,
   OrderStatus,
   PaymentMethod,
   PaymentStatus,
 } from "../../types";
-import { getUserIdFromToken } from "../../utilis/authUtilis";
+import {
+  deleteCartItemsByUserId,
+  getUserIdFromToken,
+  updatePaymentStatus,
+} from "../../utilis/authUtilis";
 import axios from "axios";
 
 const CreateOrder = () => {
@@ -31,11 +36,16 @@ const CreateOrder = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const { totalPrice, cartItems } = location.state;
-  const userId = getUserIdFromToken();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
     PaymentMethod.CARD
   );
+
+  const { totalPrice, cartItems } = location.state;
+  const userId = getUserIdFromToken();
+
+  if (!userId) {
+    return null;
+  }
 
   const handlePaymentMethodChange = (event: any) => {
     setSelectedPaymentMethod(event.target.value);
@@ -59,6 +69,7 @@ const CreateOrder = () => {
 
     try {
       const response = await axios.post("/orders", orderData);
+      const paymentId = response.data.paymentId;
       toast({
         title: "Order Successful",
         description: "Your order has been placed successfully.",
@@ -66,15 +77,21 @@ const CreateOrder = () => {
         duration: 5000,
         isClosable: true,
       });
-      if (selectedPaymentMethod == PaymentMethod.CASH) {
+      if (selectedPaymentMethod === PaymentMethod.CASH) {
+        updatePaymentStatus(paymentId);
+        deleteCartItemsByUserId(userId);
         setShowModal(true);
         setTimeout(() => {
           setShowModal(false);
           navigate("/");
         }, 10000);
       } else {
+        console.log("paymentIddddddddddd", paymentId);
         navigate("/payment", {
-          state: { amount: totalPrice },
+          state: {
+            amount: totalPrice,
+            paymentId,
+          },
         });
       }
     } catch (error) {
