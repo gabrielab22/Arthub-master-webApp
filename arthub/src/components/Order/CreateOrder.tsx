@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
   Text,
@@ -10,6 +10,12 @@ import {
   FormControl,
   FormLabel,
   useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
 } from "@chakra-ui/react";
 import {
   CartItem,
@@ -23,10 +29,10 @@ import axios from "axios";
 const CreateOrder = () => {
   const toast = useToast();
   const location = useLocation();
+  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
   const { totalPrice, cartItems } = location.state;
-
   const userId = getUserIdFromToken();
-
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
     PaymentMethod.CARD
   );
@@ -61,6 +67,17 @@ const CreateOrder = () => {
         duration: 5000,
         isClosable: true,
       });
+      if (selectedPaymentMethod == PaymentMethod.CASH) {
+        setShowModal(true);
+        setTimeout(() => {
+          setShowModal(false);
+          navigate("/");
+        }, 10000);
+      } else {
+        navigate("/payment", {
+          state: { amount: totalPrice },
+        });
+      }
     } catch (error) {
       console.error("Error submitting order:", error);
       toast({
@@ -109,6 +126,22 @@ const CreateOrder = () => {
           Submit Order
         </Button>
       </Box>
+      <Modal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          navigate("/");
+        }}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Order Confirmation</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            Your order is on your way. Thank you for shopping with us!
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };
