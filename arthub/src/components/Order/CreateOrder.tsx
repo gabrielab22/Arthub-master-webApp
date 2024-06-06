@@ -59,7 +59,6 @@ const CreateOrder = () => {
 
     try {
       const response = await axios.post("/orders", orderData);
-      console.log("Order submitted successfully", response.data);
       toast({
         title: "Order Successful",
         description: "Your order has been placed successfully.",
@@ -79,7 +78,6 @@ const CreateOrder = () => {
         });
       }
     } catch (error) {
-      console.error("Error submitting order:", error);
       toast({
         title: "Error",
         description:

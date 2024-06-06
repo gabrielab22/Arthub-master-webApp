@@ -31,18 +31,19 @@ const Payment = () => {
     if (!cardElement) {
       return;
     }
-
     try {
       const { data } = await axios.post("payment", {
         amount,
       });
+      console.log("data", data);
+      console.log("cardElement", cardElement);
 
       const paymentResult = await stripe.confirmCardPayment(data.clientSecret, {
         payment_method: {
           card: cardElement,
         },
       });
-
+      console.log("paymentREsult", paymentResult);
       if (paymentResult.error) {
         toast({
           title: "Payment Error",
@@ -78,25 +79,25 @@ const Payment = () => {
   };
 
   return (
-    <>
-      <Wrapper></Wrapper>
-      <Box>
-        <Button
-          mt={4}
-          onClick={handlePayment}
-          isDisabled={!stripe || !elements}
-        >
-          Pay
-        </Button>
+    <Box mt={10} mx="auto" maxWidth="400px">
+      <Box borderWidth="1px" borderRadius="lg" p={4}>
+        <form>
+          <Box mb={4}>
+            <CardElement options={{ style: { base: { fontSize: "16px" } } }} />
+          </Box>
+          <Button onClick={handlePayment} colorScheme="blue" size="lg">
+            Click to Complete Payment
+          </Button>
+        </form>
       </Box>
-    </>
+    </Box>
   );
 };
 
-const Wrapper = () => (
+const PaymentWithElements = () => (
   <Elements stripe={stripePromise}>
     <Payment />
   </Elements>
 );
 
-export default Payment;
+export default PaymentWithElements;
