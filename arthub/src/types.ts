@@ -50,6 +50,9 @@ export interface CartItem {
   quantity: number;
   product: Product;
 }
+export interface OrderResponse {
+  orderDetail: OrderDetail;
+}
 
 export interface Product {
   id: number;

@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Box, Heading, Text, List, ListItem, Stack } from "@chakra-ui/react";
-import { OrderDetail } from "../../types";
+import { OrderDetail, OrderResponse } from "../../types";
 import { getUserIdFromToken } from "../../utilis/authUtilis";
-
-interface OrderResponse {
-  orderDetail: OrderDetail;
-}
 
 const OrderList = () => {
   const [orders, setOrders] = useState<OrderDetail[]>([]);
@@ -27,9 +23,9 @@ const OrderList = () => {
   }, []);
 
   return (
-    <Box p={5} mt={10}>
+    <Box p={5}>
       <Heading as="h2" size="xl" mb={5}>
-        Lista narudžbi
+        Order History
       </Heading>
       <List spacing={5}>
         {orders.map((order) => (
@@ -42,16 +38,26 @@ const OrderList = () => {
           >
             <Stack spacing={3}>
               <Heading as="h3" size="md">
-                Narudžba #{order.id}
+                Order #{order.id}
               </Heading>
-              <Text>Status narudžbe: {order.status}</Text>
-              <Text>Ukupno: ${order.total}</Text>
-              <Text>Status plaćanja: {order.paymentDetail.status}</Text>
-              <Text>Metoda plaćanja: {order.paymentDetail.method}</Text>
-              <Text>Iznos plaćanja: ${order.paymentDetail.amount}</Text>
+              <Text>Order Status: {order.status}</Text>
+              <Text>Total: ${order.total}</Text>
+              <Text>Payment Status: {order.paymentDetail.status}</Text>
+              <Text>Payment Method: {order.paymentDetail.method}</Text>
+              <Text>Payment Amount: ${order.paymentDetail.amount}</Text>
               <Text>
-                Broj naručenih proizvoda:
+                Number of Products Ordered:{" "}
                 {order.orderItems.reduce((sum, item) => sum + item.quantity, 0)}
+              </Text>
+              <Text>
+                Order Created At:{" "}
+                {new Date(order.createdAt).toLocaleDateString("en-US", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </Text>
             </Stack>
           </ListItem>
