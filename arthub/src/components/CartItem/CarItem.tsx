@@ -70,11 +70,26 @@ const CartItemComponent: React.FC = () => {
     setCartItems(updatedCartItems);
   };
 
+  const handleRemoveFromCart = async (cartItemId: number) => {
+    try {
+      await axios.delete(`/cart-item/${cartItemId}`);
+      const updatedCartItems = cartItems.filter(
+        (item) => item.id !== cartItemId
+      );
+      setCartItems(updatedCartItems);
+    } catch (error) {
+      console.error("Error removing item from cart:", error);
+    }
+  };
+
   const totalPrice = cartItems.reduce((total, item) => {
     return total + item.product.price * item.quantity;
   }, 0);
+
   const handleCheckout = () => {
-    console.log("lala", totalPrice);
+    navigate("/order", {
+      state: { totalPrice: totalPrice, cartItems: cartItems },
+    });
   };
 
   return (
@@ -134,6 +149,13 @@ const CartItemComponent: React.FC = () => {
               </Flex>
             </Box>
             <Text ml={4}>Price: ${item.product.price}</Text>
+            <Button
+              ml={4}
+              size="sm"
+              onClick={() => handleRemoveFromCart(item.id)}
+            >
+              Remove
+            </Button>
           </Box>
         ))}
         <Box mt={4} textAlign="center">

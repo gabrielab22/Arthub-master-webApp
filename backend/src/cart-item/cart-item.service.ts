@@ -69,7 +69,7 @@ export class CartItemService {
   async deleteCartItem(cartItemId: number): Promise<void> {
     await this.prisma.cartItem.delete({
       where: {
-        id: cartItemId,
+        id: parseInt(cartItemId.toString()),
       },
     });
   }

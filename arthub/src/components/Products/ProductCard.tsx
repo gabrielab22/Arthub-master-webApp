@@ -53,7 +53,7 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
       const userId = getUserIdFromToken();
       const quantity = 1;
       try {
-        await axios.post("/cart-item/add-or-update", {
+        await axios.post("cart-item/add-or-update", {
           userId,
           productId: product.id,
           quantity,
