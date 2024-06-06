@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { PrismaService } from 'src/prisma.service';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrderResponseDto } from './dto/order-response.dto';
 
 @Injectable()
 export class OrdersService {
@@ -44,6 +45,20 @@ export class OrdersService {
 
       return order;
     });
+  }
+
+  async getUserOrders(userId: number): Promise<OrderResponseDto[]> {
+    const orderDetails = await this.prisma.orderDetail.findMany({
+      where: { userId: parseInt(userId.toString()) },
+      include: {
+        paymentDetail: true,
+        orderItems: true,
+      },
+    });
+
+    return orderDetails.map((orderDetail) => ({
+      orderDetail,
+    }));
   }
   async findAll() {
     return this.prisma.orderDetail.findMany({

@@ -10,6 +10,7 @@ import {
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrderResponseDto } from './dto/order-response.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -18,6 +19,12 @@ export class OrdersController {
   @Post()
   async createOrder(@Body() createOrderDto: CreateOrderDto) {
     return this.ordersService.createOrder(createOrderDto);
+  }
+  @Get(':userId')
+  async getUserOrders(
+    @Param('userId') userId: number,
+  ): Promise<OrderResponseDto[]> {
+    return this.ordersService.getUserOrders(userId);
   }
 
   @Get()

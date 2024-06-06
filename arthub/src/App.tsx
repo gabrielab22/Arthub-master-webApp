@@ -11,6 +11,7 @@ import EditProduct from "./components/Products/EditProduct";
 import VideoGrid from "./components/Art/VideoGrid";
 import CartItemComponent from "./components/CartItem/CarItem";
 import CreateOrder from "./components/Order/CreateOrder";
+import OrderList from "./components/Order/OrderList";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="shop" element={<ProductGrid />} />
           <Route path="contact" element={<ContactForm />} />
           <Route path="cart-item" element={<CartItemComponent />} />
+          <Route path="history" element={<OrderList />} />
           <Route path="order" element={<CreateOrder />} />
           <Route path="product">
             <Route path="add" element={<AddProduct />} />

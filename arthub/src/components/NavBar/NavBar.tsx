@@ -3,6 +3,7 @@ import { Button, ButtonGroup } from "@chakra-ui/react";
 import "./NavBar.css";
 import { useNavigate } from "react-router-dom";
 import { BsCart4 } from "react-icons/bs";
+import { MdHistory } from "react-icons/md";
 import { isAdmin, isLoggedIn } from "../../utilis/authUtilis";
 
 const NavBar = () => {
@@ -35,6 +36,18 @@ const NavBar = () => {
           ))}
         </ul>
       </nav>
+      {isLoggedIn() && !isAdmin() && (
+        <Button
+          rightIcon={<MdHistory />}
+          colorScheme="green"
+          variant="outline"
+          onClick={() => navigate("/history")}
+          style={{ marginRight: "10px" }}
+        >
+          History of order
+        </Button>
+      )}
+
       {isLoggedIn() && !isAdmin() && (
         <Button
           rightIcon={<BsCart4 />}
