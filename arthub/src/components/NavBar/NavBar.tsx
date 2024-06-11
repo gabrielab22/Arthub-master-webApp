@@ -1,6 +1,5 @@
 import React from "react";
-import { Button, ButtonGroup } from "@chakra-ui/react";
-import "./NavBar.css";
+import { Button, ButtonGroup, Box, Flex, Stack } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { BsCart4 } from "react-icons/bs";
 import { MdHistory } from "react-icons/md";
@@ -24,58 +23,74 @@ const NavBar = () => {
   };
 
   return (
-    <header className="navbar">
-      <nav>
-        <ul className="menu-list">
-          {menuItems.map((item) => (
-            <li key={item.id} style={{ margin: "0 10px" }}>
-              <a href={item.link} className="menu-item">
-                {item.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      {isLoggedIn() && !isAdmin() && (
-        <Button
-          rightIcon={<MdHistory />}
-          colorScheme="green"
-          variant="outline"
-          onClick={() => navigate("/history")}
-          style={{ marginRight: "10px" }}
-        >
-          History of order
-        </Button>
-      )}
+    <Flex
+      as="header"
+      className="navbar"
+      align="center"
+      justify="space-between"
+      wrap="wrap"
+      padding="1.5rem"
+      bg="black"
+      color="white"
+    >
+      <Box>
+        <ButtonGroup variant="outline" spacing="3">
+          {isLoggedIn() ? (
+            <>
+              <Button
+                rightIcon={<MdHistory />}
+                colorScheme="green"
+                onClick={() => navigate("/history")}
+              >
+                History of order
+              </Button>
+              <Button
+                rightIcon={<BsCart4 />}
+                colorScheme="blue"
+                onClick={() => navigate("/cart-item")}
+              >
+                Cart
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button colorScheme="green" onClick={() => navigate("/login")}>
+                Login
+              </Button>
+              <Button colorScheme="blue" onClick={() => navigate("/register")}>
+                Register
+              </Button>
+            </>
+          )}
+        </ButtonGroup>
+      </Box>
 
-      {isLoggedIn() && !isAdmin() && (
-        <Button
-          rightIcon={<BsCart4 />}
-          colorScheme="blue"
-          variant="outline"
-          onClick={() => navigate("/cart-item")}
-          style={{ marginRight: "10px" }}
-        >
-          Cart
+      <Stack
+        direction={{ base: "column", md: "row" }}
+        spacing={{ base: 4, md: 8 }}
+        alignItems="center"
+      >
+        {menuItems.map((item) => (
+          <Box key={item.id}>
+            <Button
+              as="a"
+              href={item.link}
+              variant="ghost"
+              color="white"
+              _hover={{ bg: "teal.700" }}
+            >
+              {item.title}
+            </Button>
+          </Box>
+        ))}
+      </Stack>
+
+      {isLoggedIn() && (
+        <Button colorScheme="red" onClick={handleLogout}>
+          Logout
         </Button>
       )}
-      <div>
-        {isLoggedIn() ? (
-          <Button colorScheme="red" onClick={handleLogout}>
-            Logout
-          </Button>
-        ) : (
-          <ButtonGroup variant="outline" spacing="3">
-            <Button colorScheme="blue" onClick={() => navigate("/login")}>
-              Login
-            </Button>
-            <Button colorScheme="green" onClick={() => navigate("/register")}>
-              Register
-            </Button>
-          </ButtonGroup>
-        )}
-      </div>
-    </header>
+    </Flex>
   );
 };
 

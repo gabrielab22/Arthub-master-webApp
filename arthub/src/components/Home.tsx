@@ -5,7 +5,11 @@ const HomePage = () => {
   return (
     <Box>
       <main>
-        <Text fontFamily="Cinzel" fontSize="40px" textAlign="center" mt="4">
+        <Text
+          fontFamily="Cinzel"
+          fontSize={{ base: "24px", md: "40px" }}
+          textAlign="center"
+        >
           Welcome to arthub!
         </Text>
         <Box
@@ -14,7 +18,10 @@ const HomePage = () => {
           alignItems="center"
           backgroundColor="rgba(128, 128, 128, 0.5)"
         >
-          <Box mb="10px" width="100%">
+          <Box
+            mb={{ base: "20px", md: "10px" }}
+            width={{ base: "100%", md: "80%" }}
+          >
             <img
               src="/assets/img/sunset.jpg"
               alt="sunset"
@@ -29,13 +36,17 @@ const HomePage = () => {
             p="4"
             width="100%"
           >
-            <Text as="samp" flex="1">
+            <Text
+              as="samp"
+              flex={{ base: "1", md: "2" }}
+              textAlign={{ base: "center", md: "left" }}
+            >
               Welcome to my updated website! Here, you'll find a rich gallery
               section that I'll keep fresh with regular updates. Browse through
               our shop for limited edition prints, artist proofs, and original
               artwork. Enjoy exploring!
             </Text>
-            <Box flex="1" textAlign="center">
+            <Box flex={{ base: "1", md: "1" }} textAlign="center">
               <img
                 src="/assets/img/gitar-man.jpg"
                 alt="Gitar man"
@@ -43,14 +54,20 @@ const HomePage = () => {
               />
             </Box>
           </Box>
-          <Box mb="10px" width="100%">
+          <Box
+            mb={{ base: "20px", md: "10px" }}
+            width={{ base: "100%", md: "80%" }}
+          >
             <img
               src="/assets/img/chill-man.jpg"
               alt="Chill Man"
               style={{ width: "100%" }}
             />
           </Box>
-          <Box mb="10px" width="100%">
+          <Box
+            mb={{ base: "20px", md: "10px" }}
+            width={{ base: "100%", md: "80%" }}
+          >
             <img
               src="/assets/img/locals.jpg"
               alt="locals"

@@ -28,6 +28,7 @@ import {
   deleteCartItemsByUserId,
   getUserIdFromToken,
   updatePaymentStatus,
+  updateProductQuantities,
 } from "../../utilis/authUtilis";
 import axios from "axios";
 
@@ -78,6 +79,7 @@ const CreateOrder = () => {
         isClosable: true,
       });
       if (selectedPaymentMethod === PaymentMethod.CASH) {
+        updateProductQuantities(cartItems);
         updatePaymentStatus(paymentId);
         deleteCartItemsByUserId(userId);
         setShowModal(true);
@@ -86,11 +88,12 @@ const CreateOrder = () => {
           navigate("/");
         }, 10000);
       } else {
-        console.log("paymentIddddddddddd", paymentId);
+        console.log("cartItems", cartItems);
         navigate("/payment", {
           state: {
             amount: totalPrice,
             paymentId,
+            cartItems,
           },
         });
       }

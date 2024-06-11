@@ -14,6 +14,7 @@ import {
   deleteCartItemsByUserId,
   getUserIdFromToken,
   updatePaymentStatus,
+  updateProductQuantities,
 } from "../../utilis/authUtilis";
 
 const stripePromise = loadStripe(STRIPE_PUBLISHABLE_API_KEY);
@@ -21,7 +22,7 @@ const stripePromise = loadStripe(STRIPE_PUBLISHABLE_API_KEY);
 const Payment = () => {
   const toast = useToast();
   const location = useLocation();
-  const { amount, paymentId } = location.state;
+  const { amount, paymentId, cartItems } = location.state;
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ const Payment = () => {
       const { data } = await axios.post("payment", {
         amount,
       });
-
+      console.log("Productsss", cartItems);
       const paymentResult = await stripe.confirmCardPayment(
         data.client_secret,
         {
@@ -72,10 +73,11 @@ const Payment = () => {
             duration: 5000,
             isClosable: true,
           });
+          updateProductQuantities(cartItems);
           updatePaymentStatus(paymentId);
           deleteCartItemsByUserId(userId);
         }
-        navigate("shop");
+        navigate("/shop");
       }
     } catch (error) {
       console.error("Error processing payment:", error);

@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { User } from "../types";
+import { CartItem, User } from "../types";
 import axios from "axios";
 
 export const isLoggedIn = (): boolean => {
@@ -28,6 +28,31 @@ export const calculateTotalPrice = (cartItems: any) => {
   );
 
   return totalPrice;
+};
+
+export const updateProductQuantities = async (cartItems: CartItem[]) => {
+  try {
+    for (const cartItem of cartItems) {
+      const updatedProduct = {
+        ...cartItem.product,
+        price: parseFloat(cartItem.product.price.toString()),
+        quantity: parseInt(
+          (cartItem.product.quantity - cartItem.quantity).toString(),
+          10
+        ),
+      };
+
+      try {
+        await axios.put(`/product/${cartItem.product.id}`, updatedProduct);
+        console.log(`Product ${cartItem.product.id} updated successfully`);
+      } catch (error) {
+        console.error(`Error updating product ${cartItem.product.id}:`, error);
+      }
+    }
+    console.log("All products updated successfully");
+  } catch (error) {
+    console.error("Error updating products", error);
+  }
 };
 
 export const updatePaymentStatus = async (paymentId: number) => {

@@ -18,8 +18,8 @@ const EditProduct = () => {
 
   const [product, setProduct] = useState({
     name: "",
-    price: 0,
-    quantity: 0,
+    price: "0",
+    quantity: "0",
     pictureUrl: "",
     description: "",
   });
@@ -30,7 +30,12 @@ const EditProduct = () => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`/product/${productId}`);
-        setProduct(response.data);
+        const fetchedProduct = response.data;
+        setProduct({
+          ...fetchedProduct,
+          price: fetchedProduct.price.toString(),
+          quantity: fetchedProduct.quantity.toString(),
+        });
       } catch (error) {
         console.error("Error fetching product:", error);
         toast({
@@ -56,7 +61,13 @@ const EditProduct = () => {
 
   const handleSubmit = async () => {
     try {
-      await axios.put(`/product/${productId}`, product);
+      const updatedProduct = {
+        ...product,
+        price: parseFloat(product.price),
+        quantity: parseInt(product.quantity, 10),
+      };
+
+      await axios.put(`/product/${productId}`, updatedProduct);
       toast({
         title: "Product Updated",
         description: `${product.name} has been updated successfully.`,
