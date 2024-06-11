@@ -51,6 +51,14 @@ const CartItemComponent: React.FC = () => {
   };
 
   const handleIncreaseQuantity = (itemId: number) => {
+    const item = cartItems.find((item) => item.id === itemId);
+    if (!item) return;
+
+    if (item.quantity + 1 > item.product.quantity) {
+      alert("Not enough products in stock!");
+      return;
+    }
+
     const updatedCartItems = cartItems.map((item) => {
       if (item.id === itemId) {
         return { ...item, quantity: item.quantity + 1 };
@@ -94,7 +102,7 @@ const CartItemComponent: React.FC = () => {
 
   return (
     <Center>
-      <Box maxW="600px" width="100%">
+      <Box maxW="600px" width="100%" p={{ base: 4, md: 8 }}>
         <Text fontSize="xl" fontWeight="bold" mb={4} mt={10} textAlign="center">
           Cart Items
         </Text>
@@ -105,13 +113,14 @@ const CartItemComponent: React.FC = () => {
             p={4}
             mb={4}
             display="flex"
+            flexDirection={{ base: "column", md: "row" }}
             alignItems="center"
           >
-            <Box mr={4} flexShrink={0}>
+            <Box mr={{ base: 0, md: 4 }} mb={{ base: 4, md: 0 }}>
               <Image
                 src={item.product.pictureUrl || ""}
                 alt={item.product.name || ""}
-                boxSize="100px"
+                boxSize={{ base: "100%", md: "100px" }}
                 objectFit="cover"
               />
             </Box>
@@ -133,9 +142,9 @@ const CartItemComponent: React.FC = () => {
                     handleQuantityChange(item.id, parseInt(e.target.value, 10))
                   }
                   min={1}
-                  max={10} // You can adjust the maximum quantity allowed
+                  max={item.product.quantity}
                   size="sm"
-                  width="50px"
+                  width={{ base: "100%", md: "50px" }}
                   mx={2}
                 />
                 <Box ml={2}>
@@ -148,9 +157,10 @@ const CartItemComponent: React.FC = () => {
                 </Box>
               </Flex>
             </Box>
-            <Text ml={4}>Price: ${item.product.price}</Text>
+            <Text ml={{ base: 0, md: 4 }}>Price: ${item.product.price}</Text>
             <Button
-              ml={4}
+              ml={{ base: 0, md: 4 }}
+              mt={{ base: 4, md: 0 }}
               size="sm"
               onClick={() => handleRemoveFromCart(item.id)}
             >

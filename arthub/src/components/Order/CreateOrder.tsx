@@ -10,16 +10,9 @@ import {
   FormControl,
   FormLabel,
   useToast,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
 } from "@chakra-ui/react";
 import {
   CartItem,
-  OrderResponse,
   OrderStatus,
   PaymentMethod,
   PaymentStatus,
@@ -31,12 +24,13 @@ import {
   updateProductQuantities,
 } from "../../utilis/authUtilis";
 import axios from "axios";
+import SendInvoiceModal from "../Contact/SendInvoiceModal";
 
 const CreateOrder = () => {
   const toast = useToast();
   const location = useLocation();
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
+  const [isSendInvoiceModalOpen, setSendInvoiceModalOpen] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
     PaymentMethod.CARD
   );
@@ -82,11 +76,7 @@ const CreateOrder = () => {
         updateProductQuantities(cartItems);
         updatePaymentStatus(paymentId);
         deleteCartItemsByUserId(userId);
-        setShowModal(true);
-        setTimeout(() => {
-          setShowModal(false);
-          navigate("/");
-        }, 10000);
+        setSendInvoiceModalOpen(true);
       } else {
         console.log("cartItems", cartItems);
         navigate("/payment", {
@@ -144,22 +134,13 @@ const CreateOrder = () => {
           Submit Order
         </Button>
       </Box>
-      <Modal
-        isOpen={showModal}
+      <SendInvoiceModal
+        cartItems={cartItems}
+        isOpen={isSendInvoiceModalOpen}
         onClose={() => {
-          setShowModal(false);
-          navigate("/");
+          setSendInvoiceModalOpen(false);
         }}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Order Confirmation</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            Your order is on your way. Thank you for shopping with us!
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      />
     </Box>
   );
 };

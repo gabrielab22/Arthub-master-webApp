@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, useToast } from "@chakra-ui/react";
 import {
   CardElement,
@@ -7,7 +7,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { STRIPE_PUBLISHABLE_API_KEY } from "./constants";
 import { loadStripe } from "@stripe/stripe-js";
 import {
@@ -16,6 +16,7 @@ import {
   updatePaymentStatus,
   updateProductQuantities,
 } from "../../utilis/authUtilis";
+import SendInvoiceModal from "../Contact/SendInvoiceModal";
 
 const stripePromise = loadStripe(STRIPE_PUBLISHABLE_API_KEY);
 
@@ -25,7 +26,7 @@ const Payment = () => {
   const { amount, paymentId, cartItems } = location.state;
   const stripe = useStripe();
   const elements = useElements();
-  const navigate = useNavigate();
+  const [isSendInvoiceModalOpen, setSendInvoiceModalOpen] = useState(false);
 
   const handlePayment = async () => {
     if (!stripe || !elements) {
@@ -76,8 +77,8 @@ const Payment = () => {
           updateProductQuantities(cartItems);
           updatePaymentStatus(paymentId);
           deleteCartItemsByUserId(userId);
+          setSendInvoiceModalOpen(true);
         }
-        navigate("/shop");
       }
     } catch (error) {
       console.error("Error processing payment:", error);
@@ -105,6 +106,13 @@ const Payment = () => {
           </Button>
         </form>
       </Box>
+      <SendInvoiceModal
+        cartItems={cartItems}
+        isOpen={isSendInvoiceModalOpen}
+        onClose={() => {
+          setSendInvoiceModalOpen(false);
+        }}
+      />
     </Box>
   );
 };

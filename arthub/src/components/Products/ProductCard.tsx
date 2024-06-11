@@ -29,6 +29,7 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
   const navigate = useNavigate();
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [availableQuantity, setAvailableQuantity] = useState(product.quantity);
 
   const addToCart = async () => {
     if (!isLoggedIn()) {
@@ -51,29 +52,34 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
         return;
       }
       const userId = getUserIdFromToken();
-      const quantity = 1;
-      try {
-        await axios.post("cart-item/add-or-update", {
-          userId,
-          productId: product.id,
-          quantity,
-        });
+      const quantityToAdd = 1;
 
-        toast({
-          title: "Added to Cart",
-          description: `${product.name} has been added to your cart.`,
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "There was an error adding the product to your cart.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
+      if (availableQuantity > 0) {
+        try {
+          await axios.post("cart-item/add-or-update", {
+            userId,
+            productId: product.id,
+            quantity: quantityToAdd,
+          });
+
+          setAvailableQuantity((prevQuantity) => prevQuantity - quantityToAdd);
+
+          toast({
+            title: "Added to Cart",
+            description: `${product.name} has been added to your cart.`,
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+        } catch (error) {
+          toast({
+            title: "Error",
+            description: "There was an error adding the product to your cart.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
       }
     }
   };
@@ -83,7 +89,12 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
   };
 
   return (
-    <Box borderWidth="1px" borderRadius="lg" overflow="hidden" p="4">
+    <Box
+      borderWidth="1px"
+      borderRadius="lg"
+      overflow="hidden"
+      p={{ base: 2, sm: 4 }}
+    >
       <AspectRatio ratio={1}>
         <Box
           bgImage={`url(${product.pictureUrl})`}
@@ -93,18 +104,29 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
         />
       </AspectRatio>
       <Box mt="1" fontWeight="semibold" lineHeight="tight" isTruncated>
-        <Heading size="md">{product.name}</Heading>
-        <Text>Price: ${product.price}</Text>
-        <Text>Quantity Available: {product.quantity}</Text>
-        <Stack direction="row" spacing={4} mt="1">
-          <Button colorScheme="blue" flex="7" onClick={() => addToCart()}>
-            Add to cart
+        <Heading size="md" fontSize={{ base: "md", md: "lg" }}>
+          {product.name}
+        </Heading>
+        <Text fontSize={{ base: "sm", md: "md" }}>Price: ${product.price}</Text>
+        <Text fontSize={{ base: "sm", md: "md" }}>
+          Quantity Available: {availableQuantity}
+        </Text>
+        <Stack direction={{ base: "column", md: "row" }} spacing={2} mt="1">
+          <Button
+            colorScheme={availableQuantity > 0 ? "blue" : "gray"}
+            flex="1"
+            fontSize={{ base: "sm", md: "md" }}
+            onClick={() => addToCart()}
+            isDisabled={availableQuantity <= 0}
+          >
+            {availableQuantity > 0 ? "Add to Cart" : "Coming Soon"}
           </Button>
           <Button
             rightIcon={<CgDetailsMore />}
             colorScheme="teal"
             variant="outline"
-            flex="3"
+            flex="1"
+            fontSize={{ base: "sm", md: "md" }}
             onClick={onViewDetails}
           >
             View Details
@@ -112,11 +134,10 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
         </Stack>
 
         {isAdmin() && (
-          <Box mt="2">
+          <Stack direction="row" spacing={2} mt="2">
             <Button
               colorScheme="green"
               onClick={() => navigate("/product/add")}
-              mr="2"
               size={{ base: "xs", md: "sm" }}
             >
               Add
@@ -124,7 +145,6 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
             <Button
               colorScheme="yellow"
               onClick={() => handleEdit(product.id)}
-              mr="2"
               size={{ base: "xs", md: "sm" }}
             >
               Edit
@@ -136,7 +156,7 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
             >
               Delete
             </Button>
-          </Box>
+          </Stack>
         )}
       </Box>
 

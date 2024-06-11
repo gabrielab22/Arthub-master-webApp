@@ -6,7 +6,7 @@ import Login from "./components/Login";
 import NavBar from "./components/NavBar/NavBar";
 import ProductGrid from "./components/Products/ProductGrid";
 import AddProduct from "./components/Products/AddProduct";
-import ContactForm from "./components/Contact";
+import ContactForm from "./components/Contact/Contact";
 import EditProduct from "./components/Products/EditProduct";
 import VideoGrid from "./components/Art/VideoGrid";
 import CartItemComponent from "./components/CartItem/CarItem";
@@ -18,11 +18,7 @@ function App() {
   return (
     <div className="App">
       <NavBar />
-      <div
-        style={{
-          paddingTop: "5%",
-        }}
-      >
+      <div>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="register" element={<Register />} />

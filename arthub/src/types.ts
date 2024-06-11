@@ -35,6 +35,9 @@ export interface CreateUser {
   address?: string | null;
   role: Role;
 }
+export interface OrderResponse {
+  orderDetail: OrderDetail;
+}
 
 export interface PaymentDetail {
   id: number;
@@ -49,9 +52,6 @@ export interface CartItem {
   id: number;
   quantity: number;
   product: Product;
-}
-export interface OrderResponse {
-  orderDetail: OrderDetail;
 }
 
 export interface Product {

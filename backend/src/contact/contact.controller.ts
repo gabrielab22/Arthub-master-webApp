@@ -1,6 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ContactService } from './contact.service';
 import { ConfigService } from '@nestjs/config';
+import { Prisma } from '@prisma/client';
 
 @Controller('contact')
 export class ContactController {
@@ -27,6 +28,29 @@ export class ContactController {
     } catch (error) {
       console.error('Error sending message:', error);
       return { success: false, message: 'Failed to send message.' };
+    }
+  }
+
+  @Post('sendInvoice')
+  async sendInvoiceWithEmail(
+    @Body() body: { email: string; cartItems: any[] },
+  ) {
+    const { email, cartItems } = body;
+    const subject = 'Your Invoice';
+    const text = 'Please find attached your invoice.';
+
+    try {
+      await this.contactService.sendEmailWithPDF(
+        email,
+        subject,
+        text,
+        cartItems,
+        email,
+      );
+      return { success: true, message: 'Invoice sent successfully!' };
+    } catch (error) {
+      console.error('Error sending invoice:', error);
+      return { success: false, message: 'Failed to send invoice.' };
     }
   }
 }
