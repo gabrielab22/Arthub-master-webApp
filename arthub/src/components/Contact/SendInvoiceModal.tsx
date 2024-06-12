@@ -9,9 +9,6 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  FormControl,
-  FormLabel,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { CartItem } from "../../types";
@@ -69,12 +66,10 @@ const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({
         <ModalHeader>Send Invoice</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <FormControl>
-            <FormLabel>Email</FormLabel>
-            <p>{userEmail}</p>
-          </FormControl>
-          <p>Thank you for your order!</p>
-          <p>Do you want the invoice to be sent to your email?</p>
+          <h2 style={{ fontWeight: "bold" }}>Thank you for your order!</h2>
+          <p style={{ marginBottom: "16px" }}>
+            Do you want the invoice to be sent to your email ({userEmail})?
+          </p>
         </ModalBody>
 
         <ModalFooter>
