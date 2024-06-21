@@ -13,6 +13,7 @@ import CartItemComponent from "./components/CartItem/CarItem";
 import CreateOrder from "./components/Order/CreateOrder";
 import OrderList from "./components/Order/OrderList";
 import Payment from "./components/Payment/StripePayment";
+import TopSellingArtists from "./components/Statistic/TopSellingArtists";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="history" element={<OrderList />} />
           <Route path="order" element={<CreateOrder />} />
           <Route path="payment" element={<Payment />} />
+          <Route path="statistic" element={<TopSellingArtists />} />
 
           <Route path="product">
             <Route path="add" element={<AddProduct />} />

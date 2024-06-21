@@ -111,6 +111,9 @@ const ProductCard: React.FC<Props> = ({ product, onViewDetails }) => {
         <Text fontSize={{ base: "sm", md: "md" }}>
           Quantity Available: {availableQuantity}
         </Text>
+        <Text fontSize={{ base: "sm", md: "md" }}>
+          Artist: {product.artist}
+        </Text>
         <Stack direction={{ base: "column", md: "row" }} spacing={2} mt="1">
           <Button
             colorScheme={availableQuantity > 0 ? "blue" : "gray"}

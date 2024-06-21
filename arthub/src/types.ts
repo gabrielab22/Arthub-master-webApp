@@ -62,6 +62,7 @@ export interface Product {
   price: number;
   quantity: number;
   pictureUrl?: string | null;
+  artist: string;
   cartItems: CartItem[];
   orderItems: OrderItem[];
   createdAt: Date;

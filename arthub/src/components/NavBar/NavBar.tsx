@@ -51,6 +51,14 @@ const NavBar = () => {
               >
                 Cart
               </Button>
+              {isAdmin() && (
+                <Button
+                  colorScheme="purple"
+                  onClick={() => navigate("/statistic")}
+                >
+                  Statistics
+                </Button>
+              )}
             </>
           ) : (
             <>

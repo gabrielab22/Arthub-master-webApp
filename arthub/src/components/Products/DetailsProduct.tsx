@@ -35,9 +35,13 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
         <ModalCloseButton />
         <ModalBody>
           <Box>
+            <Text fontWeight="bold" fontSize="lg">
+              ARTIST: {product.artist}
+            </Text>
             <Image
               src={product.pictureUrl || ""}
               alt={product.name || "Product Image"}
+              mt="4"
             />
             <Text mt="4">{product.description}</Text>
             <Text mt="2">Price: ${product.price}</Text>

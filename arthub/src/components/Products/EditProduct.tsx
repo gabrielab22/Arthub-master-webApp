@@ -22,6 +22,7 @@ const EditProduct = () => {
     quantity: "0",
     pictureUrl: "",
     description: "",
+    artist: "",
   });
 
   const toast = useToast();
@@ -134,6 +135,15 @@ const EditProduct = () => {
           type="text"
           name="pictureUrl"
           value={product.pictureUrl}
+          onChange={handleChange}
+        />
+      </FormControl>
+      <FormControl id="artist" mb="4">
+        <FormLabel>Artist</FormLabel>
+        <Input
+          type="text"
+          name="artist"
+          value={product.artist}
           onChange={handleChange}
         />
       </FormControl>

@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderResponseDto } from './dto/order-response.dto';
+import { TimePeriodDto } from './dto/time-period.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -19,6 +21,11 @@ export class OrdersController {
   @Post()
   async createOrder(@Body() createOrderDto: CreateOrderDto) {
     return this.ordersService.createOrder(createOrderDto);
+  }
+
+  @Get('top-selling-artists')
+  async getTopSellingArtists(@Query() timePeriodDto: TimePeriodDto) {
+    return this.ordersService.getTopSellingArtists(timePeriodDto);
   }
 
   @Get(':userId')

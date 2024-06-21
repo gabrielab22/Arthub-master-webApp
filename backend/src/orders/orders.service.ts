@@ -3,6 +3,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { PrismaService } from 'src/prisma.service';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderResponseDto } from './dto/order-response.dto';
+import { TimePeriodDto } from './dto/time-period.dto';
 
 @Injectable()
 export class OrdersService {
@@ -67,6 +68,50 @@ export class OrdersService {
         paymentDetail: true,
       },
     });
+  }
+
+  async getTopSellingArtists(timePeriodDto: TimePeriodDto) {
+    const { startDate, endDate } = timePeriodDto;
+
+    const topSellingArtists = await this.prisma.orderDetail.findMany({
+      where: {
+        createdAt: {
+          gte: new Date(startDate),
+          lte: new Date(endDate),
+        },
+      },
+      select: {
+        orderItems: {
+          select: {
+            product: {
+              select: {
+                artist: true,
+              },
+            },
+            quantity: true,
+          },
+        },
+      },
+    });
+
+    const artistSales: { [key: string]: number } = {};
+
+    topSellingArtists.forEach((orderDetail) => {
+      orderDetail.orderItems.forEach((orderItem) => {
+        const artist = orderItem.product.artist;
+        const quantity = Number(orderItem.quantity);
+        if (!artistSales[artist]) {
+          artistSales[artist] = 0;
+        }
+        artistSales[artist] += quantity;
+      });
+    });
+
+    const sortedArtistSales = Object.entries(artistSales)
+      .map(([artist, sales]) => ({ artist, sales }))
+      .sort((a, b) => b.sales - a.sales);
+
+    return sortedArtistSales;
   }
 
   async findOne(id: number) {

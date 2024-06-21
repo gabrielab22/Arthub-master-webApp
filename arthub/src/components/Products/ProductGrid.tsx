@@ -3,6 +3,7 @@ import axios from "axios";
 import ProductCard from "./ProductCard";
 import {
   Box,
+  Flex,
   Select,
   SimpleGrid,
   Text,
@@ -14,6 +15,7 @@ import ProductDetailsModal from "./DetailsProduct";
 const ProductGrid: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedType, setSelectedType] = useState<Variant | "all">("all");
+  const [selectedArtist, setSelectedArtist] = useState<string | "all">("all");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   useEffect(() => {
@@ -28,13 +30,20 @@ const ProductGrid: React.FC = () => {
     fetchData();
   }, []);
 
-  const filteredProducts =
-    selectedType === "all"
-      ? products
-      : products.filter((product) => product.variant === selectedType);
+  const filteredProducts = products.filter((product) => {
+    const matchType =
+      selectedType === "all" || product.variant === selectedType;
+    const matchArtist =
+      selectedArtist === "all" || product.artist === selectedArtist;
+    return matchType && matchArtist;
+  });
 
   const handleTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedType(event.target.value as Variant | "all");
+  };
+
+  const handleArtistChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedArtist(event.target.value);
   };
 
   const handleCardClick = (product: Product) => {
@@ -43,22 +52,47 @@ const ProductGrid: React.FC = () => {
 
   const columns = useBreakpointValue({ base: 1, md: 2, lg: 3 });
 
+  // Get unique artists from products
+  const artists = Array.from(
+    new Set(products.map((product) => product.artist))
+  );
+
   return (
     <Box className="top-box" p={{ base: 4, md: 8 }}>
-      <Select
-        value={selectedType}
-        onChange={handleTypeChange}
+      <Flex
+        direction={{ base: "column", md: "row" }}
         mb={4}
-        maxW={{ base: "100%", md: "50%", lg: "25%" }}
-        mx="auto"
+        justify="center"
+        align="center"
       >
-        <option value="all">All Types</option>
-        {Object.values(Variant).map((type) => (
-          <option key={type} value={type}>
-            {type}
-          </option>
-        ))}
-      </Select>
+        <Select
+          value={selectedType}
+          onChange={handleTypeChange}
+          mb={{ base: 4, md: 0 }}
+          maxW={{ base: "100%", md: "50%", lg: "25%" }}
+          mx="auto"
+        >
+          <option value="all">All Types</option>
+          {Object.values(Variant).map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </Select>
+        <Select
+          value={selectedArtist}
+          onChange={handleArtistChange}
+          maxW={{ base: "100%", md: "50%", lg: "25%" }}
+          mx="auto"
+        >
+          <option value="all">All Artists</option>
+          {artists.map((artist, index) => (
+            <option key={index} value={artist}>
+              {artist}
+            </option>
+          ))}
+        </Select>
+      </Flex>
       {filteredProducts.length > 0 ? (
         <SimpleGrid columns={columns} spacing={4}>
           {filteredProducts.map((product) => (

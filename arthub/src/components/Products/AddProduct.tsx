@@ -109,6 +109,15 @@ const AddProduct: React.FC = () => {
             })}
           />
         </FormControl>
+        <FormControl mb="4" isRequired>
+          <FormLabel>Artist</FormLabel>
+          <Input
+            type="text"
+            {...register("artist", {
+              required: "Artist is required",
+            })}
+          />
+        </FormControl>
         <Button type="submit" colorScheme="blue" isLoading={isSubmitting}>
           Add Product
         </Button>
