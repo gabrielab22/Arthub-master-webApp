@@ -36,8 +36,15 @@ const TopSellingArtists: React.FC = () => {
 
   return (
     <Box p={5}>
-      <Flex direction="column" align="center" maxW="400px" mx="auto">
-        <FormControl id="start-date" mb={4}>
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        align={{ base: "stretch", md: "center" }}
+        justify="center"
+        maxW="600px"
+        mx="auto"
+        gap={4}
+      >
+        <FormControl id="start-date">
           <FormLabel>Start Date</FormLabel>
           <Input
             type="date"
@@ -45,7 +52,7 @@ const TopSellingArtists: React.FC = () => {
             onChange={(e) => setStartDate(e.target.value)}
           />
         </FormControl>
-        <FormControl id="end-date" mb={4}>
+        <FormControl id="end-date">
           <FormLabel>End Date</FormLabel>
           <Input
             type="date"
@@ -53,30 +60,42 @@ const TopSellingArtists: React.FC = () => {
             onChange={(e) => setEndDate(e.target.value)}
           />
         </FormControl>
-        <Button onClick={fetchTopSellingArtists} colorScheme="teal" mb={5}>
-          Fetch Top Selling Artists
+        <Button
+          onClick={fetchTopSellingArtists}
+          colorScheme="teal"
+          fontSize="sm"
+          px={4}
+          py={2}
+        >
+          Fetch Artists
         </Button>
       </Flex>
       {chartData && (
-        <Bar
-          data={{
-            labels: chartData.map((item) => item.artist),
-            datasets: [
-              {
-                label: "Sales",
-                data: chartData.map((item) => item.sales),
-                backgroundColor: "rgba(54, 162, 235, 0.6)",
-              },
-            ],
-          }}
-          options={{
-            scales: {
-              y: {
-                beginAtZero: true,
-              },
-            },
-          }}
-        />
+        <Box mt={5} maxW="100%" overflowX="auto">
+          <Box width="1000px" height="500px">
+            <Bar
+              data={{
+                labels: chartData.map((item) => item.artist),
+                datasets: [
+                  {
+                    label: "Sales",
+                    data: chartData.map((item) => item.sales),
+                    backgroundColor: "rgba(54, 162, 235, 0.6)",
+                  },
+                ],
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                  },
+                },
+              }}
+            />
+          </Box>
+        </Box>
       )}
     </Box>
   );

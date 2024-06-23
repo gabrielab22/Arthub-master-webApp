@@ -53,15 +53,8 @@ const OrderList = () => {
   const filteredOrders = orders.filter((order) => {
     const orderDate = new Date(order.createdAt);
     const orderYear = orderDate.getFullYear().toString();
-    const orderMonth = orderDate.toLocaleDateString("en-US", {
-      month: "2-digit",
-      year: "numeric",
-    });
-    const orderDay = orderDate.toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    const orderMonth = (orderDate.getMonth() + 1).toString().padStart(2, "0");
+    const orderDay = orderDate.getDate().toString().padStart(2, "0");
 
     return (
       (!selectedYear || orderYear === selectedYear) &&
@@ -70,33 +63,37 @@ const OrderList = () => {
     );
   });
 
-  // Extract unique years, months, and days from orders
   const uniqueYears = Array.from(
     new Set(
       orders.map((order) => new Date(order.createdAt).getFullYear().toString())
     )
   );
-  const uniqueMonths = Array.from(
-    new Set(
-      orders.map((order) =>
-        new Date(order.createdAt).toLocaleDateString("en-US", {
-          month: "2-digit",
-          year: "numeric",
-        })
-      )
-    )
+
+  const currentYear = new Date().getFullYear();
+  const allYears = Array.from({ length: 5 }, (_, i) =>
+    (currentYear - 2 + i).toString()
   );
-  const uniqueDays = Array.from(
-    new Set(
-      orders.map((order) =>
-        new Date(order.createdAt).toLocaleDateString("en-US", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })
-      )
-    )
+
+  const allMonths = Array.from({ length: 12 }, (_, i) =>
+    (i + 1).toString().padStart(2, "0")
   );
+
+  const daysInMonth = (year: number, month: number) => {
+    return new Date(year, month, 0).getDate();
+  };
+
+  const allDays =
+    selectedYear && selectedMonth
+      ? Array.from(
+          {
+            length: daysInMonth(
+              parseInt(selectedYear),
+              parseInt(selectedMonth)
+            ),
+          },
+          (_, i) => (i + 1).toString().padStart(2, "0")
+        )
+      : [];
 
   return (
     <Box p={5}>
@@ -105,9 +102,14 @@ const OrderList = () => {
       </Heading>
       <Flex mb={5} alignItems="center">
         <Text mr={3}>Year:</Text>
-        <Select placeholder="Select year" mr={3} onChange={handleYearChange}>
+        <Select
+          placeholder="Select year"
+          mr={3}
+          onChange={handleYearChange}
+          value={selectedYear}
+        >
           <option value="">All Years</option>
-          {uniqueYears.map((year, index) => (
+          {allYears.map((year, index) => (
             <option key={index} value={year}>
               {year}
             </option>
@@ -118,10 +120,11 @@ const OrderList = () => {
           placeholder="Select month"
           mr={3}
           onChange={handleMonthChange}
+          value={selectedMonth}
           disabled={!selectedYear}
         >
           <option value="">All Months</option>
-          {uniqueMonths.map((month, index) => (
+          {allMonths.map((month, index) => (
             <option key={index} value={month}>
               {month}
             </option>
@@ -131,10 +134,11 @@ const OrderList = () => {
         <Select
           placeholder="Select day"
           onChange={handleDayChange}
+          value={selectedDay}
           disabled={!selectedMonth}
         >
           <option value="">All Days</option>
-          {uniqueDays.map((day, index) => (
+          {allDays.map((day, index) => (
             <option key={index} value={day}>
               {day}
             </option>
