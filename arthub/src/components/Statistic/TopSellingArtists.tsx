@@ -37,8 +37,8 @@ const TopSellingArtists: React.FC = () => {
   return (
     <Box p={5}>
       <Flex
-        direction={{ base: "column", md: "row" }}
-        align={{ base: "stretch", md: "center" }}
+        direction="column"
+        align="stretch"
         justify="center"
         maxW="600px"
         mx="auto"
@@ -67,12 +67,12 @@ const TopSellingArtists: React.FC = () => {
           px={4}
           py={2}
         >
-          Fetch Artists
+          Show
         </Button>
       </Flex>
       {chartData && (
         <Box mt={5} maxW="100%" overflowX="auto">
-          <Box width="1000px" height="500px">
+          <Box width="100%" height="600px">
             <Bar
               data={{
                 labels: chartData.map((item) => item.artist),
@@ -85,10 +85,11 @@ const TopSellingArtists: React.FC = () => {
                 ],
               }}
               options={{
+                indexAxis: "y",
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                  y: {
+                  x: {
                     beginAtZero: true,
                   },
                 },
