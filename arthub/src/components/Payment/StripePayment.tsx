@@ -48,7 +48,6 @@ const Payment = () => {
       const { data } = await axios.post("payment", {
         amount,
       });
-      console.log("Productsss", cartItems);
       const paymentResult = await stripe.confirmCardPayment(
         data.client_secret,
         {
